@@ -1,0 +1,24 @@
+Where is Diffie-Hellman used in practice?
+
+The Diffie-Hellman (DH) key exchange protocol is a cornerstone of modern cryptographic systems. It is prominently used in:
+
+    TLS/SSL protocols (e.g., HTTPS) to establish a secure communication session between browsers and web servers.
+
+    Secure messaging platforms such as Signal, WhatsApp, and Telegram—particularly in their use of the Double Ratchet Algorithm, which incorporates DH exchanges for forward secrecy and post-compromise security.
+
+    VPN technologies like IPsec and OpenVPN for secure key negotiation over untrusted networks.
+
+
+Why is Diffie-Hellman important for secure communication?
+
+Diffie-Hellman allows two parties to generate a shared secret over an insecure channel without ever transmitting the secret itself. This makes it fundamentally important for protecting against eavesdropping.
+
+Key benefits include:
+
+    Forward Secrecy: If long-term keys are compromised, past communications remain secure.
+
+    Scalability: No need to pre-share keys; keys can be derived dynamically per session.
+
+    Foundation for Strong Encryption: Used to derive symmetric session keys that are later used with fast algorithms like AES.
+
+This cryptographic primitive is crucial in enabling confidentiality, integrity, and trust in real-world communications over the internet.
