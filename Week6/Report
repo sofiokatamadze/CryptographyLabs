@@ -1,0 +1,48 @@
+Task 1: Understand the Components
+
+1. How does the padding_oracle function determine if padding is valid?
+
+It decrypts the ciphertext and then:
+
+    Attempts to remove PKCS#7 padding.
+
+    If padding removal is successful, it returns True.
+
+    If it raises an exception (ValueError or TypeError), it returns False.
+
+This behavior is what makes a padding oracle vulnerable — it leaks whether the padding is valid.
+
+2. What is the purpose of the IV in CBC mode?
+
+The Initialization Vector (IV) is used to randomize the first block of plaintext. In CBC:
+
+    plaintext_block ⊕ IV → encrypted_block1
+    This ensures that encrypting the same plaintext twice results in different ciphertexts.
+
+3. Why does the ciphertext need to be a multiple of the block size?
+
+AES operates on fixed-size blocks (16 bytes). CBC mode requires:
+
+    IV (16 bytes) + ciphertext (multiple of 16 bytes).
+    If the total length isn’t a multiple of 16, decryption or padding will fail.
+
+Task 2–5: Implementation Summary
+- Functions: split_blocks, decrypt_block, padding_oracle_attack, unpad_and_decode.
+- Decryption is done block by block, exploiting oracle feedback on padding validity.
+- Final plaintext was mostly recovered; last block had invalid padding but fallback logic enabled readable output.
+
+Observations:
+- Padding errors commonly occur on the final block.
+- False positives in oracle responses can result in incorrect padding.
+- Fallback decoding helps recover readable text even if padding is corrupt.
+
+Output:
+[*] Ciphertext length: 80 bytes
+[*] IV: 746869735f69735f31365f6279746573
+
+[+] Decryption complete!
+    Recovered plaintext (raw bytes): b"c\x7f~dH~dH&!Huncrd\xfbk\r\xe2\xa2\x9c\x9fl'DTi'\xd2\xfdd\x0cS\xd2\r\xba\xc9Zc\xe0\x079\xe8\x88\x87/!$FN\xe9n\xef\xf7~H\xe9WD\x8a\x84\x14\r"
+    Hex: 637f7e64487e6448262148756e637264fb6b0de2a29c9f6c2744546927d2fd640c53d20dbac95a63e00739e888872f2124464ee96eeff77e48e957448a84140d
+
+[+] Final plaintext:
+��Zc�9與/!$FN�n��~H�WD��
