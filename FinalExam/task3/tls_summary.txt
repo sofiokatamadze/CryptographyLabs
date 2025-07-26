@@ -1,0 +1,65 @@
+TLS Communication Inspection Summary
+====================================
+
+1. OpenSSL s_client Connection to www.google.com:443
+
+'depth=2 C = US, O = Google Trust Services LLC, CN = GTS Root R4
+depth=1 C = US, O = Google Trust Services, CN = WE2
+depth=0 CN = www.google.com'
+
+Certificate Chain:
+------------------
+- Leaf Certificate (Server/Google):
+    - Subject: CN = www.google.com
+    - Issuer: C = US, O = Google Trust Services, CN = WE2
+- Intermediate Certificate:
+    - Subject: C = US, O = Google Trust Services, CN = WE2
+    - Issuer: C = US, O = Google Trust Services LLC, CN = GTS Root R4
+- Root Certificate:
+    - Subject: C = US, O = Google Trust Services LLC, CN = GTS Root R4
+    - Issuer: C = BE, O = GlobalSign nv-sa, OU = Root CA, CN = GlobalSign Root CA
+
+Cipher Suite Used:
+------------------
+TLS_AES_256_GCM_SHA384
+
+TLS Version:
+------------
+TLSv1.3
+
+
+2. Wireshark TLS Handshake Analysis
+===============================
+
+
+1. **Client Hello**
+   - **Packet 78:**
+     The client begins the handshake by sending a "Client Hello" message to the server, advertising supported TLS versions (including TLS 1.3), cipher suites, and cryptographic extensions.
+      This message also includes the client random value used for key establishment.
+
+2. **Server Hello & Certificate**
+   - **Packet 84:**
+     The server responds with a "Server Hello" message, selecting the protocol version and cipher suite. The server also sends its certificate (included within this or an adjacent packet) to authenticate its identity.
+     In TLS 1.3, the key exchange parameters are also included here, enabling both parties to compute the shared secret.
+
+3. **Key Exchange**
+   - **TLS 1.3 Key Exchange:**
+     In TLS 1.3, key exchange information (such as ECDHE key shares) is exchanged as part of the Client Hello and Server Hello. These packets together complete the key exchange required for establishing the session keys for encryption.
+
+4. **Encrypted Application Data**
+   - **Packets 90, 92, and onward:**
+     After the handshake, packets are marked as "Application Data" and are fully encrypted, ensuring confidentiality and integrity for all further communication.
+
+**Summary:**
+- The handshake starts with the Client Hello, proceeds through server authentication and key exchange (Server Hello & Certificate), and concludes with secure encrypted communication.
+- TLS 1.3 integrates the key exchange into the initial handshake messages rather than as separate packets, providing both forward secrecy and strong encryption for the session.
+
+**See attached screenshot for packet numbers and details.**
+
+
+TLS provides confidentiality by encrypting all data transmitted between the client and server using strong symmetric encryption algorithms (such as AES). This ensures that even if the data is intercepted, it cannot be read by unauthorized parties.
+
+TLS provides integrity by including a Message Authentication Code (MAC) or using AEAD ciphers (like AES-GCM), which enable both ends to verify that data has not been tampered with during transmission. If any alteration is detected, the message is rejected.
+
+Additionally, TLS uses certificates and cryptographic handshakes to authenticate parties and prevent man-in-the-middle attacks, ensuring both privacy and trust in communications.
+
