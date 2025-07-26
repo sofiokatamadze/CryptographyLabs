@@ -1,0 +1,21 @@
+Signature Verification Explanation
+=================================
+
+When Bob decrypts 'signed_message.asc' using his private key, GPG automatically checks the embedded digital signature.
+
+In this case, the output includes:
+  gpg: Signature made Sat 26 Jul 2025 07:36:06 PM +04
+  gpg:                using RSA key 7800BACEAD383754EF57B2BA625A9DE0ECD90621
+  gpg: Good signature from "Alice (Alice Key) <alice@example.com>" [ultimate]
+
+This means:
+- The decrypted message was signed using Alice's private key, and
+- The signature matches Alice's public key.
+
+**How this validates the sender:**
+- Only Alice's private key could have created this signature.
+- Since Bob verified the signature using Alice's public key (imported earlier), he knows the message came from Alice and was not tampered with in transit.
+- If the message or signature had been altered, GPG would have displayed a warning and marked the signature as "BAD".
+
+**Conclusion:**
+Digital signatures in PGP provide both authenticity (proving the sender's identity) and integrity (proving the message was not changed).
